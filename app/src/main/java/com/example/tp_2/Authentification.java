@@ -3,6 +3,7 @@ package com.example.tp_2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,12 +21,15 @@ public class Authentification extends AppCompatActivity {
 EditText username;
 EditText password;
 Button Authenticate;
+String user_name;
+String pass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+
         Authenticate = findViewById(R.id.connect);
         Thread thread = new Thread(new Runnable() {
 
@@ -34,8 +38,11 @@ Button Authenticate;
                 try  {
                     URL url = null;
                     try {
-                        url = new URL("https://www.android.com/");
+                        url = new URL("https://httpbin.org/basic-auth/"+user_name+"/"+pass);
                         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        String basicAuth = "Basic " + Base64.encodeToString((user_name+":"+pass).getBytes(),
+                                Base64.NO_WRAP);
+                        urlConnection.setRequestProperty ("Authorization", basicAuth);
                         try {
                             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                             String s = readStream(in);
@@ -58,7 +65,8 @@ Button Authenticate;
         Authenticate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                user_name = username.getText().toString();
+                pass = password.getText().toString();
                 thread.start();
             }
         });

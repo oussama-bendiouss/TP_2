@@ -31,7 +31,15 @@
         android:text="Authenticate"
         android:layout_marginTop="100dp"
         android:layout_marginLeft="100dp"
+        android:layout_marginBottom="50dp"
         android:id="@+id/connect"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:text="connecté lol"
+        android:id="@+id/result"/>
 
 
 </LinearLayout>
