@@ -10,3 +10,5 @@ J'ai crée un nouveau projet avec un layout principale qui contient deux EditTex
 je peux récupérer le login mot de passe entrée sur les deux EditText et j'envoie les credentials a https://httpbin.org/ avec aussi une requete pour se connecter
 ### question 9:
 J'ai changer la valeur du text view en utilisant la fonction runOnUiThread car une seulement la thread principale a le droit de modifier la partie graphique les layouts, le runOnUithread sera sur le try principale de Thread. J'ai utilisé une variable d pour copier le résultat s et faire une sorte de passerelle entre les différents block the try
+### question 10: 
+j'ai implémenté une inner class dans la class authentification et j'ai enregistré resu comme étant un attribut de la classe authentification alors pour l'utiliser dans un runeable il suffit d'utiliser Authentification.this.resu
