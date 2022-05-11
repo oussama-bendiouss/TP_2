@@ -28,6 +28,7 @@ Button Authenticate;
 String user_name;
 String pass;
 TextView Result;
+    JSONObject resu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,30 +37,25 @@ TextView Result;
         password = findViewById(R.id.password);
         Result   = findViewById(R.id.result);
         Authenticate = findViewById(R.id.connect);
-
-        Thread thread = new Thread(new Runnable() {
+        class result implements Runnable {
 
             @Override
             public void run() {
-                try  {
-                    String s ="" ;
-
+                try {
 
                     URL url = null;
                     try {
 
-                        url = new URL("https://httpbin.org/basic-auth/"+user_name+"/"+pass);
+                        url = new URL("https://httpbin.org/basic-auth/" + user_name + "/" + pass);
                         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                        String basicAuth = "Basic " + Base64.encodeToString((user_name+":"+pass).getBytes(),
+                        String basicAuth = "Basic " + Base64.encodeToString((user_name + ":" + pass).getBytes(),
                                 Base64.NO_WRAP);
-                        urlConnection.setRequestProperty ("Authorization", basicAuth);
+                        urlConnection.setRequestProperty("Authorization", basicAuth);
                         try {
                             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                            s = readStream(in);
+                            String s = readStream(in);
                             Log.i("JFL", s);
-
-
-
+                            Authentification.this.resu = new JSONObject(s);
 
 
                         } finally {
@@ -70,14 +66,20 @@ TextView Result;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    final String d =s;
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
+
                             try {
-                                JSONObject res = new JSONObject(d);
-                                Result.setText("My result here is "+res.get("authenticated"));
+                                JSONObject json = Authentification.this.resu;
+                                Result.setText("My result here is " + json.get("authenticated"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -87,8 +89,10 @@ TextView Result;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
-        });
+        }
+        Thread thread = new Thread(new result());
 
 
         Authenticate.setOnClickListener(new View.OnClickListener() {
