@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,8 +43,11 @@ TextView Result;
             public void run() {
                 try  {
                     String s ="" ;
+
+
                     URL url = null;
                     try {
+
                         url = new URL("https://httpbin.org/basic-auth/"+user_name+"/"+pass);
                         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                         String basicAuth = "Basic " + Base64.encodeToString((user_name+":"+pass).getBytes(),
@@ -69,7 +75,13 @@ TextView Result;
 
                         @Override
                         public void run() {
-                            Result.setText("My result here is True"+d);
+                            try {
+                                JSONObject res = new JSONObject(d);
+                                Result.setText("My result here is "+res.get("authenticated"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     });
                 } catch (Exception e) {
